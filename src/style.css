@@ -1,0 +1,312 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+*::before,
+*::after {
+      box-sizing: border-box; 
+}
+body {
+    color: whitesmoke;
+    background: #121212;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;;
+}
+header,footer {
+    flex-shrink: 0;
+}
+main { 
+    flex: 1;
+    padding-bottom: 2rem;
+}
+h3 {
+    text-align: start;
+    color: whitesmoke;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 2.0rem;
+}
+.fa-solid fa-bars {
+    color: whitesmoke;
+    font-size: 1.7rem;
+}
+/*Real time clock*/ 
+.real-time-clock {
+    color: whitesmoke;
+    font-size: 13px;
+    text-align: center;
+    padding: 9px;
+}
+/* Navbar */
+.navbar {
+    background-color: #670958 !important;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+.navbar-nav .nav-link {
+    color: whitesmoke !important;
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+.nav-item a {
+    color: whitesmoke;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    font-style: inherit;
+    margin: 6px;
+}
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 15px;
+    background: black;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px black; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: whitesmoke; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #670958; 
+}
+/*Toggle Bar Icon*/
+#navbar-toggler-icon {
+    color: whitesmoke;
+    font-size: 1.7rem;
+    font-weight: bold;
+}
+/*Footer*/
+#Footer {
+    background-color: #670958;
+    color: whitesmoke;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    bottom:0;
+    width: 100%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.TMDB-logo {
+    align-self: center;
+    justify-content: center;
+    border-radius: 4px solid whitesmoke;
+    display: flex;    
+}
+#TMDB-logo {
+    width: 274px;
+    height: 274px;
+    display: block;
+    border-radius: 4px;
+}
+#TMDB-logo:hover {
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+/*Search Bar*/
+.search-bar form {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+.search-bar input[type="search"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid whitesmoke;
+    background-color: #670958;
+    color: whitesmoke;
+}
+.search-bar input[type="search"]:focus {
+    outline: none;
+    border-color: #670958;
+}
+.search-bar button {
+    padding: 7px 10px;
+    width: 50%;
+    border-radius: 4px;
+    border: 2px solid whitesmoke;
+    background-color: #128745;
+    color: whitesmoke;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.search-bar button:hover {
+    background-color: whitesmoke;
+    color:#128745;
+}
+.card {
+    background-color:#670958;
+    border: #f5f5f5 2px solid;
+    flex-direction: column;
+    display:flex;
+    overflow: hidden;
+    border-radius: .35rem;
+}
+.card-img-top {
+    aspect-ratio: 1/1.5;
+    object-fit: cover;
+    width: 100%;
+}
+.card-body {
+    padding: .5rem;
+    font-size: 0.85rem;
+}
+.card-footer {
+    background-color: black;
+    padding: .5rem;
+    font-size: 0.7rem;
+    display: flex;
+    gap: 0.28rem;
+    justify-content: flex-start;
+    align-items: center;
+}
+.card-title {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.card-text {
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+}
+.overview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;;
+}
+#overview {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.carousel-control-prev-icon span,.carousel-control-next-icon span{
+    background-color: #670958;
+    color: whitesmoke;
+    border-radius: 50%;
+}
+#favorites-btn {
+    background-color: crimson;
+    display:flex;
+    justify-content: space-between;
+    color: whitesmoke;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.7rem;
+}
+#watchlist-btn {
+    background-color :dodgerblue;
+    display:flex;
+    justify-content: space-between;
+    color: whitesmoke;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.7rem;
+}
+#Contact-Us {
+    background-color:#670958;
+    color: whitesmoke;
+    bottom: 0;
+    padding: 18px;
+    text-align: center;
+    position: relative;
+}
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  background: #222;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  z-index: 9999;
+}
+.chat-header {
+  background: #670958;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.chat-body {
+  height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  background: black;
+}
+.chat-textarea {
+  display: flex;
+  border-top: 1px solid black;
+}
+.chat-textarea ::placeholder{
+    color: #670958;
+}
+#chatInput {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  background: whitesmoke;
+  color: #670958;
+}
+#chatInput [type="text"] {
+    color:#670958;
+}
+#ChatSend {
+  padding: 10px;
+  background: #670958;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* VARVARIGOS */
+.auth-form {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.auth-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.auth-form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+.auth-form button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.error {
+  color: red;
+  margin-bottom: 1rem;
+}
+/* VARVARIGOS */
