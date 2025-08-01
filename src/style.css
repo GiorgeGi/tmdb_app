@@ -40,6 +40,9 @@ h3 {
     text-align: center;
     padding: 9px;
 }
+#myNav {
+     background-color: #670958 !important;
+}
 /* Navbar */
 .navbar {
     background-color: #670958 !important;
@@ -97,9 +100,10 @@ h3 {
     padding: 20px;
     text-align: center;
     position: relative;
+    flex-direction: column;
     bottom:0;
     width: 100%;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family:'Courier New', Courier, monospace;
 }
 .TMDB-logo {
     align-self: center;

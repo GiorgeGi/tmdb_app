@@ -10,7 +10,7 @@ export default function MoviesList() {
   }, []);
 
   return (
-    <div className="row g-2" id="movies-list">
+    <div className="row g-4" id="movies-list">
       {movies.map(m => (
         <div key={m.id} className="col-4 col-sm-3 col-lg-2 mb-4">
           <div className="card">

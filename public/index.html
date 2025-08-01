@@ -54,7 +54,15 @@
     <main>
     <!-- React mount point -->
     <div id="root"></div>
-        <!--Movies--> 
+    <div id="chatbot" class="chatbot">
+            <div class="chat-header">TMDB Chatbot <i class="fa-solid fa-robot"></i></div>
+            <div class="chat-body" id="chatBody"></div>
+            <div class="chat-textarea">
+                <input type="text" id="chatInput" placeholder="Ask me about a movie...">
+                <button id="ChatSend" class="btn btn-primary" type="submit">Send</button>
+            </div>
+        </div>
+         <!--Movies--> 
         <div class="container my-4" id="Movies">
             <h3 class="text-center text-whitesmoke mb-4">Movies</h3>
             <div class="row g-2" id="movies-list"></div>
@@ -81,35 +89,23 @@
                 </button>
             </div>
         </div>
-        <!--Chatbot-->
-        <div id="chatbot" class="chatbot">
-            <div class="chat-header">TMDB Chatbot <i class="fa-solid fa-robot"></i></div>
-            <div class="chat-body" id="chatbody"></div>
-            <div class="chat-textarea">
-                <input type="text" id="chatInput" placeholder="Ask me about a movie or TV Show...">
-                <button id="ChatSend" class="btn btn-primary">Send</button>
-            </div>
-        </div>
     </main>
     <!--Footer-->
     <footer class="footer" id="Contact-Us">
         <h1>Contact us</h1>
         <p>You can find us here:</p>
-        <ol class="list-unlisted">
-            <li>
-                <i class="fa-solid fa-map-marker-alt"> Arachovitika, Patras</i>
-            </li>
-            <li>
-                <i class="fa-solid fa-evenlope"> Email: gpegiazis@gmail.com </i>
-            </li>
-            <li>
-                <i class="fa-solid fa-phone"> +30 6949230340</i>
-            </li>
-        </ol>
+            <i class="fa-solid fa-map-marker-alt">Location: Patras,Greece </i>
+            <br>
+            <i class="fa-solid fa-email">Emails: <br>gpegiazis@gmail.com<br>giorgosvarvarigos03@gmail.com</i>
+            <br>
+            <i class="fa-solid fa-phone">+30 6949230340</i>
+            <br>
         <p>&copy; All rights reserved</p>
     </footer>
     <!-- <script src="loadMovies.js"></script> -->
     <!-- <script src="popular.js"></script> -->
     <!-- <script src="trailers.js"></script> -->
+    <!--script src="chatbot.js"></script> -->
+    
 </body>
 </html>
