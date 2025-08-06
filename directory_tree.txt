@@ -1,0 +1,38 @@
+.
+├── api
+│   ├── _config.php
+│   ├── login.php
+│   └── signup.php
+├── directory_tree.txt
+├── package.json
+├── package-lock.json
+├── public
+│   ├── index.html
+│   ├── manifest.json
+│   ├── robots.txt
+│   └── TMDB.png
+├── README.md
+├── requirements.txt
+└── src
+    ├── App.css
+    ├── App.js
+    ├── App.test.js
+    ├── components
+    │   ├── Login.js
+    │   ├── MovieChatbot.css
+    │   ├── MovieChatbot.js
+    │   ├── MoviesList.js
+    │   ├── PopularTVShows.js
+    │   ├── Signup.js
+    │   └── TrailersCarousel.js
+    ├── context
+    │   └── SearchContext.js
+    ├── index.css
+    ├── index.js
+    ├── logo.svg
+    ├── reportWebVitals.js
+    ├── setupTests.js
+    ├── spaNavigation.js
+    └── style.css
+
+5 directories, 30 files
