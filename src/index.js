@@ -4,16 +4,22 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { enableSpaNavigation } from './spaNavigation';
+import { SearchProvider } from './context/SearchContext'; // adjust path if needed
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <SearchProvider>
+        <App />
+      </SearchProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
+
+// Enable link interception after the page loads
+enableSpaNavigation();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

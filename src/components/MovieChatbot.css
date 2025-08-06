@@ -1,0 +1,85 @@
+.chatbot {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 300px;
+  background: #222;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  z-index: 9999;
+}
+
+.chatbot-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #670958;
+  color: white;
+  padding: 10px 16px;
+  border: 2px solid black;
+  border-radius: 30px;
+  cursor: pointer;
+  z-index: 10000;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.chat-header {
+  background: #670958;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  position: relative;
+}
+
+.chat-header .btn-close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.chat-body {
+  height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  background: black;
+}
+
+.chat-textarea {
+  display: flex;
+  border-top: 1px solid black;
+}
+
+.chat-textarea ::placeholder {
+  color: #670958;
+}
+
+.chat-textarea input[type="text"] {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  background: whitesmoke;
+  color: #670958;
+}
+
+.chat-textarea button {
+  padding: 10px;
+  background: #670958;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.text-start .badge,
+.text-end .badge {
+  background-color: #670958 !important;
+}
+
