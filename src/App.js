@@ -8,6 +8,8 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import MovieChatbot from './components/MovieChatbot';
 import { SearchContext } from './context/SearchContext';
+import MovieDetail from './components/MovieDetail';
+import TvDetail from './components/TvDetail';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -132,6 +134,10 @@ const { setQuery } = useContext(SearchContext);
         path="/"
         element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
       />
+
+      <Route path="/movie/:id" element={<MovieDetail />} />
+      <Route path="/tv/:id" element={<TvDetail />} />
+
       <Route
         path="*"
         element={isAuthenticated ? <Navigate to="/" replace /> : <Navigate to="/login" replace />}

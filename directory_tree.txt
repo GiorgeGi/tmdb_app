@@ -21,10 +21,12 @@
     │   ├── Login.js
     │   ├── MovieChatbot.css
     │   ├── MovieChatbot.js
+    │   ├── MovieDetail.js
     │   ├── MoviesList.js
     │   ├── PopularTVShows.js
     │   ├── Signup.js
-    │   └── TrailersCarousel.js
+    │   ├── TrailersCarousel.js
+    │   └── TvDetail.js
     ├── context
     │   └── SearchContext.js
     ├── index.css
@@ -35,4 +37,4 @@
     ├── spaNavigation.js
     └── style.css
 
-5 directories, 30 files
+5 directories, 32 files
