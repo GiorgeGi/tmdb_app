@@ -166,6 +166,16 @@ export default function MovieDetail() {
 
   return (
    <>
+
+  <div className="container mt-4">
+    <button 
+      className="btn btn-primary mb-3" 
+      onClick={() => navigate("/")}
+    >
+      ← Back to Main
+    </button>
+    </div>
+
     <div className="container mt-4">
       <div className="row g-0">
         <div className="col-md-4">
@@ -239,14 +249,7 @@ export default function MovieDetail() {
       </div>
     </div>
 
-  <div className="container mt-4">
-    <button 
-      className="btn btn-primary mb-3" 
-      onClick={() => navigate("/")}
-    >
-      ← Back to Main
-    </button>
-    </div>
+
     </>
   );
 }

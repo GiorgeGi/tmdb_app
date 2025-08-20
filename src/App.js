@@ -105,45 +105,22 @@ function App() {
 
 const { setQuery } = useContext(SearchContext);
 
-/*  useEffect(() => {
-    const form = document.getElementById('searchForm');
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const input = document.getElementById('searchInput');
-      const value = input.value.trim().toLowerCase();
-      setQuery(value);
-    };
-
-    if (form) {
-      form.addEventListener('submit', handleSubmit);
-    }
-
-    return () => {
-      if (form) {
-        form.removeEventListener('submit', handleSubmit);
-      }
-    };
-  }, [setQuery]); */
-
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/"
-        element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
-      />
+  <Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
 
-      <Route path="/movie/:id" element={<MovieDetail />} />
-      <Route path="/tv/:id" element={<TvDetail />} />
+    {/* Home is public */}
+    <Route path="/" element={<Home />} />
 
-      <Route
-        path="*"
-        element={isAuthenticated ? <Navigate to="/" replace /> : <Navigate to="/login" replace />}
-      />
-    </Routes>
-  );
+    {/* Details still public */}
+    <Route path="/movie/:id" element={<MovieDetail />} />
+    <Route path="/tv/:id" element={<TvDetail />} />
+
+    {/* Catch-all */}
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+);
 }
 
 export default App;

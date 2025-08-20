@@ -26,8 +26,10 @@
     │   ├── PopularTVShows.js
     │   ├── Signup.js
     │   ├── TrailersCarousel.js
-    │   └── TvDetail.js
+    │   ├── TvDetail.js
+    │   └── UserBubble.js
     ├── context
+    │   ├── AuthContext.js
     │   └── SearchContext.js
     ├── index.css
     ├── index.js
@@ -37,4 +39,4 @@
     ├── spaNavigation.js
     └── style.css
 
-5 directories, 32 files
+5 directories, 34 files

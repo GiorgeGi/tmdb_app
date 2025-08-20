@@ -6,13 +6,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { enableSpaNavigation } from './spaNavigation';
 import { SearchProvider } from './context/SearchContext'; // adjust path if needed
+import { AuthProvider } from "./context/AuthContext";
+import { UserBubble } from "./components/UserBubble";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <SearchProvider>
-        <App />
+        <AuthProvider>
+            <UserBubble />
+            <App />
+        </AuthProvider>
       </SearchProvider>
     </BrowserRouter>
   </React.StrictMode>
