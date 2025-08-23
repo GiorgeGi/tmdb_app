@@ -1,17 +1,42 @@
 <?php
 // api/_config.php
 
-// Allow React on port 3000 to call this API
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
+// ---- CORS ----
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost',        // if you ever call API directly
+];
 
-// Handle preflight OPTIONS
+if (in_array($origin, $allowedOrigins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+}
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-header('Content-Type: application/json');
+
+// ---- Content type ----
+header('Content-Type: application/json; charset=utf-8');
+
+// ---- Sessions (cookie-based) ----
+ini_set('session.cookie_domain', 'localhost'); // change to 'None' if using HTTPS + cross-site
+session_set_cookie_params([
+    'lifetime' => 60*60*24*7, // 7 days
+    'path'     => '/',
+    'secure'   => false,      // set true in HTTPS
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// ---- DB ----
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'tmdb_app');
 define('DB_USER', 'root');
@@ -30,10 +55,11 @@ try {
     exit;
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-if (!is_array($input)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid JSON']);
-    exit;
+// ---- Helper to read JSON safely (POST) ----
+function read_json_body(): array {
+    $raw = file_get_contents('php://input');
+    if ($raw === '' || $raw === false) return [];
+    $data = json_decode($raw, true);
+    return is_array($data) ? $data : [];
 }
 

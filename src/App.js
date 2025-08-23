@@ -10,6 +10,8 @@ import MovieChatbot from './components/MovieChatbot';
 import { SearchContext } from './context/SearchContext';
 import MovieDetail from './components/MovieDetail';
 import TvDetail from './components/TvDetail';
+import { UserBubble } from "./components/UserBubble";
+import ListsPage from './components/ListsPage';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -119,6 +121,8 @@ const { setQuery } = useContext(SearchContext);
 
     {/* Catch-all */}
     <Route path="*" element={<Navigate to="/" replace />} />
+
+    <Route path="/lists" element={<ListsPage />} /> {/* new route */}
   </Routes>
 );
 }

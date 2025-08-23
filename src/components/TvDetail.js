@@ -1,9 +1,11 @@
 // src/pages/TvDetail.js
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export default function TvDetail() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const apiKey = "9677143e952d820ef6cfd4d08cbc6e8b";
 
   const [tv, setTv] = useState(null);
@@ -53,6 +55,30 @@ export default function TvDetail() {
 
     fetchData();
   }, [id]);
+
+const handleAction = async (action) => {
+    if (!user) {
+      alert("You must be logged in!");
+      return;
+    }
+    try {
+      const res = await fetch("http://localhost/tmdb_app/api/update_list.php", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "tv",
+          tmdb_id: tv.id,
+          action: action,
+        }),
+      });
+      const data = await res.json();
+      alert(data.message);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+  };
 
 const fetchSeasonDetails = async (seasonNumber) => {
   if (seasonDetails[seasonNumber]) return; // already fetched
@@ -215,12 +241,9 @@ const fetchSeasonDetails = async (seasonNumber) => {
               </small>
             </p>
             <div className="btn-wrapper d-flex justify-content-center" style={{ gap: "10px" }}>
-              <button className="btn btn-secondary">
-                <i className="fa-solid fa-heart"></i> Add to favorites
-              </button>
-              <button className="btn btn-secondary">
-                <i className="fa-solid fa-eye"></i> Add to watchlist
-              </button>
+            <button onClick={() => handleAction("favorite")} className="btn btn-secondary"><i className="fa-solid fa-heart"></i> Add to favorites</button>
+            <button onClick={() => handleAction("watchlist")} className="btn btn-secondary"><i className="fa-solid fa-eye"></i> Add to watchlist</button>
+            <button onClick={() => handleAction("watched")} className="btn btn-secondary"><i className="fa-solid fa-eye"></i> Mark as watched</button>
             </div>
           </div>
           <div className="col-md-8">

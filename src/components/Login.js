@@ -16,7 +16,8 @@ export default function Login() {
       const res = await fetch("http://localhost/tmdb_app/api/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, password })
+        body: JSON.stringify({ email, username, password }),
+        credentials: "include" // not needed anymore, but can stay
       });
       const data = await res.json();
       if (data.token) {

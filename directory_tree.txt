@@ -1,8 +1,15 @@
 .
 ├── api
+│   ├── _auth.php
 │   ├── _config.php
+│   ├── lists_fetch.php
+│   ├── lists_get.php
+│   ├── lists_remove.php
+│   ├── lists_set.php
 │   ├── login.php
-│   └── signup.php
+│   ├── logout.php
+│   ├── signup.php
+│   └── update_list.php
 ├── directory_tree.txt
 ├── package.json
 ├── package-lock.json
@@ -13,30 +20,33 @@
 │   └── TMDB.png
 ├── README.md
 ├── requirements.txt
-└── src
-    ├── App.css
-    ├── App.js
-    ├── App.test.js
-    ├── components
-    │   ├── Login.js
-    │   ├── MovieChatbot.css
-    │   ├── MovieChatbot.js
-    │   ├── MovieDetail.js
-    │   ├── MoviesList.js
-    │   ├── PopularTVShows.js
-    │   ├── Signup.js
-    │   ├── TrailersCarousel.js
-    │   ├── TvDetail.js
-    │   └── UserBubble.js
-    ├── context
-    │   ├── AuthContext.js
-    │   └── SearchContext.js
-    ├── index.css
-    ├── index.js
-    ├── logo.svg
-    ├── reportWebVitals.js
-    ├── setupTests.js
-    ├── spaNavigation.js
-    └── style.css
+├── src
+│   ├── App.css
+│   ├── App.js
+│   ├── App.test.js
+│   ├── components
+│   │   ├── ListsHelper.js
+│   │   ├── ListsPage.js
+│   │   ├── Login.js
+│   │   ├── MovieChatbot.css
+│   │   ├── MovieChatbot.js
+│   │   ├── MovieDetail.js
+│   │   ├── MoviesList.js
+│   │   ├── PopularTVShows.js
+│   │   ├── Signup.js
+│   │   ├── TrailersCarousel.js
+│   │   ├── TvDetail.js
+│   │   └── UserBubble.js
+│   ├── context
+│   │   ├── AuthContext.js
+│   │   └── SearchContext.js
+│   ├── index.css
+│   ├── index.js
+│   ├── logo.svg
+│   ├── reportWebVitals.js
+│   ├── setupTests.js
+│   ├── spaNavigation.js
+│   └── style.css
+└── tmdb_app.sql
 
-5 directories, 34 files
+5 directories, 44 files
