@@ -33,18 +33,30 @@ $stmt = $pdo->prepare("SELECT * FROM user_items WHERE user_id=? AND tmdb_id=? AN
 $stmt->execute([$user_id, $tmdb_id, $type]);
 $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$fav = ($existing['is_favorite'] ?? 0) == 1 ? 0 : 1;
+$fav  = $existing['is_favorite'] ?? 1;
 $list = $existing['list_type'] ?? null;
 
-switch($action){
-    case "favorite":
-        $fav = $fav ? 0 : 1;
+switch ($action) {
+    case "is_favorite":
+        // Use provided value if given, otherwise toggle
+        if (isset($input['is_favorite'])) {
+            $fav = intval($input['is_favorite']);  // 0 or 1 from frontend
+        } else {
+            $fav = $fav ? 0 : 1; // toggle fallback
+        }
         break;
+
     case "watchlist":
     case "watched":
-        $list = $action;
+        $list = $action; // keep favorite unchanged
+        break;
+
+    case "note":
+        // only note update
         break;
 }
+
+
 
 // Update or insert
 if ($existing) {

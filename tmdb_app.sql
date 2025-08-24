@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 23, 2025 at 06:06 PM
+-- Generation Time: Aug 24, 2025 at 11:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,7 +56,26 @@ INSERT INTO `auth_tokens` (`id`, `user_id`, `token`, `expires_at`, `created_at`)
 (14, 4, 'eb04f120392ca836a2dd30d112f167f7', '2025-08-30 16:07:38', '2025-08-23 14:07:38'),
 (15, 4, '240d325626ab57ca3f66d0ef22cf6ea6', '2025-08-30 16:33:05', '2025-08-23 14:33:05'),
 (16, 5, 'b371f63003884169b49d0497255a79af', '2025-08-30 16:45:35', '2025-08-23 14:45:35'),
-(17, 6, 'f366ee8c2a0eac1bcbf93415097ab40f', '2025-08-30 16:49:10', '2025-08-23 14:49:10');
+(17, 6, 'f366ee8c2a0eac1bcbf93415097ab40f', '2025-08-30 16:49:10', '2025-08-23 14:49:10'),
+(18, 6, 'f1a4d8f0a88a22e330076da1deb4aad1', '2025-08-31 22:30:30', '2025-08-24 20:30:30'),
+(19, 5, '66c1e2b62f75a240a31c47317bb26f65', '2025-08-31 22:53:59', '2025-08-24 20:53:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_items`
+--
+
+CREATE TABLE `custom_items` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
+  `type` enum('movie','tv') NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -188,20 +207,18 @@ CREATE TABLE `user_items` (
   `list_type` enum('watchlist','watched') DEFAULT NULL,
   `note` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `custom_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_items`
 --
 
-INSERT INTO `user_items` (`id`, `user_id`, `tmdb_id`, `type`, `is_favorite`, `list_type`, `note`, `created_at`, `updated_at`) VALUES
-(1, 4, 1061474, 'movie', 1, 'watched', NULL, '2025-08-23 08:57:36', '2025-08-23 08:59:47'),
-(3, 5, 575265, 'movie', 1, 'watchlist', NULL, '2025-08-23 09:00:24', '2025-08-23 09:00:26'),
-(5, 6, 119051, 'tv', 0, 'watchlist', NULL, '2025-08-23 09:01:04', '2025-08-23 16:01:38'),
-(8, 6, 1061474, 'movie', 1, 'watchlist', NULL, '2025-08-23 15:10:42', '2025-08-23 16:01:19'),
-(13, 6, 79744, 'tv', 1, 'watched', NULL, '2025-08-23 15:29:13', '2025-08-23 16:01:44'),
-(20, 6, 1087192, 'movie', 1, 'watchlist', NULL, '2025-08-23 16:01:56', '2025-08-23 16:01:56');
+INSERT INTO `user_items` (`id`, `user_id`, `tmdb_id`, `type`, `is_favorite`, `list_type`, `note`, `created_at`, `updated_at`, `custom_id`) VALUES
+(1, 4, 1061474, 'movie', 1, 'watched', NULL, '2025-08-23 08:57:36', '2025-08-23 08:59:47', NULL),
+(3, 5, 575265, 'movie', 1, 'watchlist', 'woohooooo', '2025-08-23 09:00:24', '2025-08-24 21:15:43', NULL),
+(5, 6, 119051, 'tv', 1, 'watchlist', 'yeah', '2025-08-23 09:01:04', '2025-08-24 20:53:38', NULL);
 
 --
 -- Indexes for dumped tables
@@ -214,6 +231,13 @@ ALTER TABLE `auth_tokens`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uniq_auth_tokens_token` (`token`),
   ADD KEY `idx_auth_tokens_user_id` (`user_id`);
+
+--
+-- Indexes for table `custom_items`
+--
+ALTER TABLE `custom_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `episodes`
@@ -256,7 +280,8 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_items`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user_item_unique` (`user_id`,`tmdb_id`,`type`);
+  ADD UNIQUE KEY `user_item_unique` (`user_id`,`tmdb_id`,`type`),
+  ADD KEY `custom_id` (`custom_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -266,7 +291,13 @@ ALTER TABLE `user_items`
 -- AUTO_INCREMENT for table `auth_tokens`
 --
 ALTER TABLE `auth_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `custom_items`
+--
+ALTER TABLE `custom_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `episodes`
@@ -302,7 +333,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_items`
 --
 ALTER TABLE `user_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
@@ -313,6 +344,12 @@ ALTER TABLE `user_items`
 --
 ALTER TABLE `auth_tokens`
   ADD CONSTRAINT `fk_auth_tokens_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `custom_items`
+--
+ALTER TABLE `custom_items`
+  ADD CONSTRAINT `custom_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `episodes`
@@ -330,7 +367,8 @@ ALTER TABLE `seasons`
 -- Constraints for table `user_items`
 --
 ALTER TABLE `user_items`
-  ADD CONSTRAINT `user_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `user_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_items_ibfk_2` FOREIGN KEY (`custom_id`) REFERENCES `custom_items` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

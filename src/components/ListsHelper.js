@@ -9,14 +9,25 @@ export async function fetchUserLists() {
  * Add or update an item in user_items
  * Accepts: itemId, itemType, listType, favorite, note
  */
-export async function addOrUpdateItem({ itemId, itemType, listType, is_favorite, note }) {
+export async function addOrUpdateItem({ itemId, itemType, listType, is_favorite, note, action }) {
   const body = {
     type: itemType,
     tmdb_id: itemId,
     action: listType || (is_favorite !== undefined ? "is_favorite" : undefined)
   };
-  if (is_favorite !== undefined) body.is_favorite = "is_favorite";
-  if (note !== undefined) body.note = note;
+
+  if (listType) {
+    body.action = listType; // "watchlist" | "watched"
+  }
+
+  if (is_favorite !== undefined) {
+    body.is_favorite = is_favorite;
+  }
+
+  if (note !== undefined) {
+    body.action = action || "note";
+    body.note = note;
+  }
 
   const res = await fetch(`${API_BASE}/update_list.php`, {
     method: "POST",
@@ -26,6 +37,7 @@ export async function addOrUpdateItem({ itemId, itemType, listType, is_favorite,
   });
   return res.json();
 }
+
 
 export async function removeItem(itemId, itemType) {
   const res = await fetch(`${API_BASE}/lists_remove.php`, {
