@@ -32,6 +32,7 @@ export default function PopularTVShows() {
               <h5 className="card-title">{t.name}</h5>
               <p className="card-text">First Aired: {t.first_air_date}</p>
               <p className="card-text">Rating: {t.vote_average}/10</p>
+              <p className="card-text overview small">{t.overview || 'No overview available.'}</p>
             </div>
           </div>
         </div>

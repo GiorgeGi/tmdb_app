@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from 'react';
-import { Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './style.css';
 import MoviesList from './components/MoviesList';
 import PopularTVShows from './components/PopularTVShows';
@@ -10,8 +11,9 @@ import MovieChatbot from './components/MovieChatbot';
 import { SearchContext } from './context/SearchContext';
 import MovieDetail from './components/MovieDetail';
 import TvDetail from './components/TvDetail';
-import { UserBubble } from "./components/UserBubble";
+//import { UserBubble } from "./components/UserBubble";
 import ListsPage from './components/ListsPage';
+import CustomDetail from './components/CustomDetail';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -103,9 +105,9 @@ function Home() {
 }
 
 function App() {
-  const isAuthenticated = Boolean(localStorage.getItem('token'));
+  //const isAuthenticated = Boolean(localStorage.getItem('token'));
 
-const { setQuery } = useContext(SearchContext);
+//const { setQuery } = useContext(SearchContext);
 
   return (
   <Routes>
@@ -118,6 +120,7 @@ const { setQuery } = useContext(SearchContext);
     {/* Details still public */}
     <Route path="/movie/:id" element={<MovieDetail />} />
     <Route path="/tv/:id" element={<TvDetail />} />
+    <Route path="/custom/:id" element={<CustomDetail />} />
 
     {/* Catch-all */}
     <Route path="*" element={<Navigate to="/" replace />} />

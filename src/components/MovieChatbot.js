@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import './MovieChatbot.css'; // We'll create this for styling
 
 const api_key = '9677143e952d820ef6cfd4d08cbc6e8b';

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 24, 2025 at 11:27 PM
+-- Generation Time: Aug 25, 2025 at 11:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -77,6 +77,13 @@ CREATE TABLE `custom_items` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `custom_items`
+--
+
+INSERT INTO `custom_items` (`id`, `user_id`, `title`, `description`, `image_url`, `type`, `created_at`, `updated_at`) VALUES
+(8, 5, 'frog', 'frogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrogfrog', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD0R7D0xWDwkKy3HJVbH_k-926TnLtSFa1mA&s', 'movie', '2025-08-26 00:43:43', '2025-08-26 00:43:43');
+
 -- --------------------------------------------------------
 
 --
@@ -117,10 +124,16 @@ CREATE TABLE `movies` (
 --
 
 INSERT INTO `movies` (`id`, `tmdb_id`, `title`, `year`, `poster_path`, `overview`, `is_custom`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'My Custom Movie', '2021', NULL, 'Αυτή είναι μια δοκιμαστική ταινία.', 1, '2025-05-31 17:11:20', '2025-05-31 17:11:20'),
 (2, 1061474, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 08:57:36', '2025-08-23 08:57:36'),
 (3, 575265, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 09:00:24', '2025-08-23 09:00:24'),
-(9, 1087192, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 16:01:56', '2025-08-23 16:01:56');
+(9, 1087192, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 16:01:56', '2025-08-23 16:01:56'),
+(10, 803796, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:09:55', '2025-08-25 15:09:55'),
+(11, 1151334, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:10:16', '2025-08-25 15:10:16'),
+(12, 755898, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:10:30', '2025-08-25 15:10:30'),
+(13, 1311031, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:10:36', '2025-08-25 15:10:36'),
+(14, 911430, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 16:48:20', '2025-08-25 16:48:20'),
+(15, 617126, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 19:42:52', '2025-08-25 19:42:52'),
+(16, 1234821, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 20:20:32', '2025-08-25 20:20:32');
 
 -- --------------------------------------------------------
 
@@ -161,9 +174,12 @@ CREATE TABLE `tv_shows` (
 --
 
 INSERT INTO `tv_shows` (`id`, `tmdb_id`, `title`, `first_air_date`, `poster_path`, `overview`, `is_custom`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'My Web Series', '2024-02-14', NULL, 'Μία original web σειρά.', 1, '2025-05-31 17:11:20', '2025-05-31 17:11:20'),
 (2, 119051, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 09:01:04', '2025-08-23 09:01:04'),
-(3, 79744, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 15:29:13', '2025-08-23 15:29:13');
+(3, 79744, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-23 15:29:13', '2025-08-23 15:29:13'),
+(4, 196890, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:09:46', '2025-08-25 15:09:46'),
+(5, 456, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:10:05', '2025-08-25 15:10:05'),
+(6, 2734, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 15:10:48', '2025-08-25 15:10:48'),
+(7, 157239, 'Placeholder', NULL, NULL, NULL, 0, '2025-08-25 20:30:50', '2025-08-25 20:30:50');
 
 -- --------------------------------------------------------
 
@@ -201,7 +217,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `create
 CREATE TABLE `user_items` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `tmdb_id` int(11) NOT NULL,
+  `tmdb_id` int(11) DEFAULT NULL,
   `type` enum('movie','tv') NOT NULL,
   `is_favorite` tinyint(1) DEFAULT 0,
   `list_type` enum('watchlist','watched') DEFAULT NULL,
@@ -217,8 +233,11 @@ CREATE TABLE `user_items` (
 
 INSERT INTO `user_items` (`id`, `user_id`, `tmdb_id`, `type`, `is_favorite`, `list_type`, `note`, `created_at`, `updated_at`, `custom_id`) VALUES
 (1, 4, 1061474, 'movie', 1, 'watched', NULL, '2025-08-23 08:57:36', '2025-08-23 08:59:47', NULL),
-(3, 5, 575265, 'movie', 1, 'watchlist', 'woohooooo', '2025-08-23 09:00:24', '2025-08-24 21:15:43', NULL),
-(5, 6, 119051, 'tv', 1, 'watchlist', 'yeah', '2025-08-23 09:01:04', '2025-08-24 20:53:38', NULL);
+(5, 6, 119051, 'tv', 1, 'watchlist', 'yeah', '2025-08-23 09:01:04', '2025-08-24 20:53:38', NULL),
+(28, 5, 1311031, 'movie', 1, 'watched', '', '2025-08-25 15:10:36', '2025-08-25 20:53:09', NULL),
+(34, 5, 911430, 'movie', 0, NULL, NULL, '2025-08-25 16:48:20', '2025-08-25 16:48:27', NULL),
+(35, 5, 575265, 'movie', 0, 'watched', NULL, '2025-08-25 16:48:43', '2025-08-25 21:53:31', NULL),
+(44, 5, NULL, 'movie', 0, 'watchlist', 'frog', '2025-08-25 21:43:43', '2025-08-25 21:45:53', 8);
 
 --
 -- Indexes for dumped tables
@@ -297,7 +316,7 @@ ALTER TABLE `auth_tokens`
 -- AUTO_INCREMENT for table `custom_items`
 --
 ALTER TABLE `custom_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `episodes`
@@ -309,7 +328,7 @@ ALTER TABLE `episodes`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `seasons`
@@ -321,7 +340,7 @@ ALTER TABLE `seasons`
 -- AUTO_INCREMENT for table `tv_shows`
 --
 ALTER TABLE `tv_shows`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -333,7 +352,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_items`
 --
 ALTER TABLE `user_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Constraints for dumped tables

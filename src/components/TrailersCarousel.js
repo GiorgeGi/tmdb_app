@@ -9,12 +9,12 @@ export default function TrailersCarousel() {
       const res = await fetch(MOVIE_URL);
       const { results } = await res.json();
       const items = await Promise.all(
-        results.slice(0,10).map(async movie => {
+        results.slice(0, 10).map(async movie => {
           const vidRes = await fetch(
             `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=9677143e952d820ef6cfd4d08cbc6e8b&language=en-US`
           );
           const { results: vids } = await vidRes.json();
-          const trailer = vids.find(v => v.type==='Trailer' && v.site==='YouTube');
+          const trailer = vids.find(v => v.type === 'Trailer' && v.site === 'YouTube');
           return { id: movie.id, title: movie.title, key: trailer?.key };
         })
       );
@@ -23,25 +23,43 @@ export default function TrailersCarousel() {
   }, []);
 
   return (
-    <div id="trailersCarousel" className="carousel slide" data-bs-ride="carousel">
-      <div className="carousel-inner" id="trailers-carousel-inner">
-        {trailers.map((t,i) => (
-          <div key={t.id} className={`carousel-item ${i===0?'active':''}`}>
-            <iframe
-              width="100%" height="320"
-              src={`https://www.youtube.com/embed/${t.key}`}
-              title={t.title}
-              frameBorder="0"
-            />
-          </div>
-        ))}
+    <div id="trailersCarouselWrapper">
+      <div id="trailersCarousel" className="carousel slide" data-bs-ride="carousel">
+        <div className="carousel-inner" id="trailers-carousel-inner">
+          {trailers.map((t, i) => (
+            <div key={t.id} className={`carousel-item ${i === 0 ? 'active' : ''}`}>
+              <iframe
+                width="100%"
+                height="320"
+                src={`https://www.youtube.com/embed/${t.key}`}
+                title={t.title}
+                frameBorder="0"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-      <button className="carousel-control-prev" type="button" data-bs-target="#trailersCarousel" data-bs-slide="prev">
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-      </button>
-      <button className="carousel-control-next" type="button" data-bs-target="#trailersCarousel" data-bs-slide="next">
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-      </button>
+
+      {/* Buttons moved below the carousel */}
+      <div className="d-flex justify-content-between mt-2">
+        <button
+          className="btn btn-secondary"
+          type="button"
+          data-bs-target="#trailersCarousel"
+          data-bs-slide="prev"
+        >
+          ◀ Previous
+        </button>
+        <button
+          className="btn btn-secondary"
+          type="button"
+          data-bs-target="#trailersCarousel"
+          data-bs-slide="next"
+        >
+          Next ▶
+        </button>
+      </div>
     </div>
   );
 }
+

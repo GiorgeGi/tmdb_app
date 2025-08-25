@@ -1,7 +1,9 @@
 .
 ├── api
+│   ├── add_custom_item.php
 │   ├── _auth.php
 │   ├── _config.php
+│   ├── custom_fetch.php
 │   ├── lists_fetch.php
 │   ├── lists_get.php
 │   ├── lists_remove.php
@@ -11,6 +13,8 @@
 │   ├── signup.php
 │   └── update_list.php
 ├── directory_tree.txt
+├── node_modules
+│   └── ...
 ├── package.json
 ├── package-lock.json
 ├── public
@@ -25,6 +29,7 @@
 │   ├── App.js
 │   ├── App.test.js
 │   ├── components
+│   │   ├── CustomDetail.js
 │   │   ├── ListsHelper.js
 │   │   ├── ListsPage.js
 │   │   ├── Login.js
@@ -42,11 +47,10 @@
 │   │   └── SearchContext.js
 │   ├── index.css
 │   ├── index.js
-│   ├── logo.svg
 │   ├── reportWebVitals.js
 │   ├── setupTests.js
 │   ├── spaNavigation.js
 │   └── style.css
 └── tmdb_app.sql
 
-5 directories, 44 files
+5 directories, 46 files

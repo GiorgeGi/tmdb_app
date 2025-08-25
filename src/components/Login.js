@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from "./../context/AuthContext"; // import context
 
 export default function Login() {
-  const [email, setEmail]       = useState('');
+  const [email]       = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError]       = useState('');

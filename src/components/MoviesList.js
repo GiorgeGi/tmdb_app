@@ -30,6 +30,9 @@ export default function MoviesList() {
               </Link>
               <div className="card-body">
                 <h5 className="card-title">{m.title}</h5>
+                    <p className="card-text">First Aired: {m.first_air_date}</p>
+                    <p className="card-text">Rating: {m.vote_average}/10</p>
+                    <p className="card-text overview small">{m.overview || 'No overview available.'}</p>
               </div>
             </div>
           </div>

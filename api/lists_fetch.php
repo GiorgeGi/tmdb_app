@@ -10,11 +10,24 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = (int)$_SESSION['user_id'];
 
-$stmt = $pdo->prepare("SELECT * FROM user_items WHERE user_id = :uid ORDER BY updated_at DESC");
+// Select user_items and join custom_items if any
+$stmt = $pdo->prepare("
+    SELECT ui.*,
+           ci.title AS custom_title,
+           ci.description AS custom_description,
+           ci.image_url AS custom_image_url,
+           ci.type AS custom_type
+    FROM user_items ui
+    LEFT JOIN custom_items ci ON ui.custom_id = ci.id
+    WHERE ui.user_id = :uid
+    ORDER BY ui.updated_at DESC
+");
 $stmt->execute(['uid' => $userId]);
+
+$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode([
     "success" => true,
-    "items" => $stmt->fetchAll(PDO::FETCH_ASSOC)
+    "items" => $items
 ]);
 

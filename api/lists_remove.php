@@ -10,20 +10,28 @@ if (!$ok) {
 }
 
 $input = read_json_body();
-$type    = $input['type'] ?? null;
-$tmdb_id = intval($input['tmdb_id'] ?? 0);
+$tmdb_id   = intval($input['tmdb_id'] ?? 0);
+$custom_id = intval($input['custom_id'] ?? 0);
+$type      = $input['type'] ?? null;
 
-if (!$type || !$tmdb_id) {
+if (!$tmdb_id && !$custom_id) {
     echo json_encode(['success' => false, 'message' => 'Missing parameters']);
     exit;
 }
 
-$stmt = $pdo->prepare("DELETE FROM user_items WHERE user_id=? AND tmdb_id=? AND type=?");
-$ok = $stmt->execute([$user_id, $tmdb_id, $type]);
+if ($custom_id) {
+    // Delete from user_items first
+    $stmt = $pdo->prepare("DELETE FROM user_items WHERE user_id=? AND custom_id=?");
+    $stmt->execute([$user_id, $custom_id]);
 
-if ($ok) {
-    echo json_encode(['success' => true, 'message' => 'Item deleted']);
+    // Then delete from custom_items table itself
+    $stmt = $pdo->prepare("DELETE FROM custom_items WHERE id=? AND user_id=?");
+    $stmt->execute([$custom_id, $user_id]);
+
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to delete']);
+    $stmt = $pdo->prepare("DELETE FROM user_items WHERE user_id=? AND tmdb_id=? AND type=?");
+    $stmt->execute([$user_id, $tmdb_id, $type]);
 }
+
+echo json_encode(['success' => true, 'message' => 'Deleted successfully!']);
 

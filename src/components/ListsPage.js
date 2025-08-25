@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { fetchUserLists, addOrUpdateItem, removeItem } from "../components/ListsHelper";
+import { fetchUserLists, addOrUpdateItem, removeItem, addCustomItem } from "../components/ListsHelper";
 import { useNavigate } from "react-router-dom";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const TMDB_API_KEY = "9677143e952d820ef6cfd4d08cbc6e8b";
 
 async function fetchTMDBDetails(tmdbId, type) {
+  if (!tmdbId) return null;
   const endpoint = type === "movie" ? "movie" : "tv";
   const res = await fetch(`https://api.themoviedb.org/3/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&language=en-US`);
   return res.json();
@@ -20,10 +22,20 @@ function NoteEditor({ item, onSave }) {
   if (!editing) {
     return (
       <div style={{ marginTop: "6px" }}>
-        <p style={{ whiteSpace: "pre-wrap", marginBottom: "6px" }}>
+        <div
+          style={{
+            whiteSpace: "pre-wrap",
+            marginBottom: "6px",
+            maxHeight: "120px",
+            overflowY: "auto",
+            padding: "4px",
+            background: "rgba(255,255,255,0.05)",
+            borderRadius: "6px"
+          }}
+        >
           {item.note || <i style={{ opacity: 0.7 }}>No notes yet.</i>}
-        </p>
-        <button onClick={() => setEditing(true)}>Edit Note</button>
+        </div>
+        <button className="btn btn-sm btn-outline-secondary" onClick={() => setEditing(true)}>Edit Note</button>
       </div>
     );
   }
@@ -34,12 +46,19 @@ function NoteEditor({ item, onSave }) {
         value={draft}
         onChange={e => setDraft(e.target.value)}
         placeholder="Your notes..."
-        style={{ width: "100%", marginBottom: "6px" }}
+        style={{
+          width: "100%",
+          marginBottom: "6px",
+          maxHeight: "120px",
+          overflowY: "auto",
+        }}
       />
-      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-        <button onClick={async () => { await onSave(draft); setEditing(false); }}>Save</button>
-        <button onClick={() => { setDraft(item.note || ""); setEditing(false); }}>Cancel</button>
-        {item.note && item.note.length > 0 && <button onClick={async () => { await onSave(""); setEditing(false); }}>Delete Note</button>}
+      <div className="d-flex flex-wrap gap-2">
+        <button className="btn btn-sm btn-purple" onClick={async () => { await onSave(draft); setEditing(false); }}>Save</button>
+        <button className="btn btn-sm btn-gray" onClick={() => { setDraft(item.note || ""); setEditing(false); }}>Cancel</button>
+        {item.note && item.note.length > 0 && (
+          <button className="btn btn-sm btn-gray" onClick={async () => { await onSave(""); setEditing(false); }}>Delete Note</button>
+        )}
       </div>
     </div>
   );
@@ -48,6 +67,14 @@ function NoteEditor({ item, onSave }) {
 export default function ListsPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [customForm, setCustomForm] = useState({
+    title: "",
+    description: "",
+    image_url: "",
+    type: "movie",
+    list_type: "watchlist",
+  });
+  const [showCustomForm, setShowCustomForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => { loadData(); }, []);
@@ -56,76 +83,202 @@ export default function ListsPage() {
     setLoading(true);
     const data = await fetchUserLists();
     if (data.success) {
-      const enriched = await Promise.all(data.items.map(async item => {
-        try {
-          const tmdbData = await fetchTMDBDetails(item.tmdb_id, item.type);
-          return {
-            ...item,
-            title: tmdbData.title || tmdbData.name,
-            poster: tmdbData.poster_path ? `https://image.tmdb.org/t/p/w200${tmdbData.poster_path}` : null,
-            year: (tmdbData.release_date || tmdbData.first_air_date || "").split("-")[0]
-          };
-        } catch {
-          return { ...item, title: "Unknown", poster: null };
-        }
-      }));
+      const enriched = await Promise.all(
+        data.items.map(async item => {
+          if (item.tmdb_id) {
+            try {
+              const tmdbData = await fetchTMDBDetails(item.tmdb_id, item.type);
+              return {
+                ...item,
+                title: tmdbData.title || tmdbData.name,
+                poster: tmdbData.poster_path ? `https://image.tmdb.org/t/p/w200${tmdbData.poster_path}` : null,
+                year: (tmdbData.release_date || tmdbData.first_air_date || "").split("-")[0],
+              };
+            } catch {
+              return { ...item, title: "Unknown", poster: null };
+            }
+          } else {
+            return {
+              ...item,
+              title: item.custom_title,
+              poster: item.custom_image_url || null,
+              year: "Custom",
+            };
+          }
+        })
+      );
       setItems(enriched);
     }
     setLoading(false);
   }
 
-  const handleRemove = async (id, type) => { await removeItem(id, type); loadData(); };
-  const handleMove = async (id, type, listType) => { await addOrUpdateItem({ itemId: id, itemType: type, listType }); loadData(); };
-  const handleFav = async (id, type, fav) => { await addOrUpdateItem({ itemId: id, itemType: type, is_favorite: fav }); loadData(); };
-  const handleNoteSave = async (id, type, note) => { await addOrUpdateItem({ itemId: id, itemType: type, note }); loadData(); };
+  const handleRemove = async (item) => {
+    await removeItem({ tmdb_id: item.tmdb_id || null, custom_id: item.custom_id || null, type: item.type || null });
+    loadData();
+  };
+
+  const handleMove = async (tmdbId, type, listType, customId = null) => {
+    await addOrUpdateItem({ itemId: tmdbId, itemType: type, listType, customId });
+    loadData();
+  };
+
+  const handleFav = async (tmdbId, type, fav, customId = null) => {
+    await addOrUpdateItem({ itemId: tmdbId, itemType: type, is_favorite: fav, customId });
+    loadData();
+  };
+
+  const handleNoteSave = async (tmdbId, type, note, customId = null) => {
+    await addOrUpdateItem({ itemId: tmdbId, itemType: type, note, customId });
+    loadData();
+  };
+
+  const handleAddCustom = async () => {
+    if (!customForm.title.trim()) return;
+    const res = await addCustomItem({
+      title: customForm.title,
+      description: customForm.description,
+      image_url: customForm.image_url,
+      type: customForm.type,
+      list_type: customForm.list_type,
+    });
+    if (res.success) {
+      setShowCustomForm(false);
+      setCustomForm({ title: "", description: "", image_url: "", type: "movie", list_type: "watchlist" });
+      loadData();
+    } else {
+      alert(res.error || "Failed to add custom item");
+    }
+  };
 
   if (loading) return <div style={{ color: "white", padding: "20px" }}>Loading lists...</div>;
 
   const favourites = items.filter(i => i.is_favorite === 1);
   const watchlist = items.filter(i => i.list_type === "watchlist");
-  const watched = items.filter(i => i.list_type === "watched");
+  const watched   = items.filter(i => i.list_type === "watched");
 
-  const renderItem = item => (
-    <div key={item.item_id} style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
-      {item.poster && <img src={item.poster} alt={item.title} style={{ width: "60px", borderRadius: "6px" }} />}
-      <div style={{ flex: 1 }}>
-        <strong>{item.title}</strong> ({item.year || "N/A"})
-        <div style={{ marginTop: "4px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {item.list_type === "watchlist" && <button onClick={() => handleMove(item.tmdb_id, item.type, "watched")}>Move to Watched</button>}
-          {item.list_type === "watched" && <button onClick={() => handleMove(item.tmdb_id, item.type, "watchlist")}>Move to Watchlist</button>}
-          {item.is_favorite ? <button onClick={() => handleFav(item.tmdb_id, item.type, 0)}>Unfav</button>
-                              : <button onClick={() => handleFav(item.tmdb_id, item.type, 1)}>Fav ❤️</button>}
-          <button onClick={() => handleRemove(item.tmdb_id, item.type)}>Delete</button>
+  const renderItem = (item) => {
+    const id = item.tmdb_id || null;
+    const customId = item.custom_id || null;
+
+    return (
+      <div key={id || customId} className="d-flex gap-2 mb-3">
+        {item.poster && (
+          <img
+            src={item.poster}
+            alt={item.title}
+            style={{ width: "60px", height: "90px", borderRadius: "6px", objectFit: "cover", cursor: !customId ? "pointer" : "default" }}
+            onClick={() => {
+              if (customId) navigate(`/custom/${customId}`);
+              else navigate(`/${item.type}/${item.tmdb_id}`);
+            }}
+          />
+        )}
+        <div style={{ flex: 1 }}>
+<strong
+  style={{ cursor: "pointer", color: "#a78bfa" }} // purple shade for link
+  onClick={() => {
+    if (customId) navigate(`/custom/${customId}`);
+    else navigate(`/${item.type}/${item.tmdb_id}`);
+  }}
+>
+  {item.title}
+</strong> ({item.year || "N/A"})
+          <div className="mt-1 d-flex flex-wrap gap-2">
+            {item.list_type === "watchlist" && <button className="btn btn-sm btn-purple" onClick={() => handleMove(id, item.type, "watched", customId)}>Move to Watched</button>}
+            {item.list_type === "watched" && <button className="btn btn-sm btn-purple" onClick={() => handleMove(id, item.type, "watchlist", customId)}>Move to Watchlist</button>}
+            {item.is_favorite
+              ? <button className="btn btn-sm btn-purple" onClick={() => handleFav(id, item.type, 0, customId)}><i className="bi bi-heart"></i> Unfav</button>
+              : <button className="btn btn-sm btn-purple" onClick={() => handleFav(id, item.type, 1, customId)}><i className="bi bi-heart-fill"></i> Fav</button>}
+            <button className="btn btn-sm btn-gray" onClick={() => handleRemove(item)}>Delete</button>
+          </div>
+          <NoteEditor item={item} onSave={(note) => handleNoteSave(id, item.type, note, customId)} />
         </div>
-        <NoteEditor item={item} onSave={note => handleNoteSave(item.tmdb_id, item.type, note)} />
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div style={{ padding: "20px", color: "white", background: "#121212", minHeight: "100vh" }}>
-      <button 
-        onClick={() => navigate("/")}
-        style={{ marginBottom: "20px", padding: "6px 12px", borderRadius: "8px", background: "#670958", color: "white" }}
-      >
-        ⬅ Back to Main Page
+    <div style={{ padding: "20px", color: "gray", background: "#121212", minHeight: "100vh" }}>
+      <button className="btn btn-sm btn-purple mb-3" onClick={() => navigate("/")}>
+        <i className="bi bi-arrow-left-circle"></i> Back to Main Page
       </button>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
-        <div style={{ background: "#222", padding: "10px", borderRadius: "10px" }}>
-          <h2>Favourites ❤️</h2>
-          {favourites.map(renderItem)}
-        </div>
-        <div style={{ background: "#222", padding: "10px", borderRadius: "10px" }}>
-          <h2>Watchlist ⏳</h2>
-          {watchlist.map(renderItem)}
-        </div>
-        <div style={{ background: "#222", padding: "10px", borderRadius: "10px" }}>
-          <h2>Watched ✅</h2>
-          {watched.map(renderItem)}
-        </div>
+      <div className="mb-3">
+        <button
+          className={`btn btn-sm ${showCustomForm ? "btn-gray" : "btn-purple"}`}
+          onClick={() => setShowCustomForm(v => !v)}
+        >
+          {showCustomForm ? "Cancel" : <><i className="bi bi-plus-circle"></i> Add Custom Item</>}
+        </button>
+
+        {showCustomForm && (
+          <div className="mt-2 p-3 rounded" style={{ background: "#222" }}>
+            <input
+              type="text"
+              placeholder="Title"
+              value={customForm.title}
+              onChange={e => setCustomForm({ ...customForm, title: e.target.value })}
+              className="form-control mb-2"
+            />
+            <textarea
+              placeholder="Description"
+              value={customForm.description}
+              onChange={e => setCustomForm({ ...customForm, description: e.target.value })}
+              className="form-control mb-2"
+              style={{ maxHeight: "140px", overflowY: "auto" }}
+            />
+            <input
+              type="text"
+              placeholder="Image URL"
+              value={customForm.image_url}
+              onChange={e => setCustomForm({ ...customForm, image_url: e.target.value })}
+              className="form-control mb-2"
+            />
+            <div className="d-flex gap-2 flex-wrap mb-2">
+              <select className="form-select form-select-sm" value={customForm.type} onChange={e => setCustomForm({ ...customForm, type: e.target.value })}>
+                <option value="movie">Movie</option>
+                <option value="tv">TV</option>
+              </select>
+              <select className="form-select form-select-sm" value={customForm.list_type} onChange={e => setCustomForm({ ...customForm, list_type: e.target.value })}>
+                <option value="watchlist">Watchlist</option>
+                <option value="watched">Watched</option>
+              </select>
+            </div>
+            <button className="btn btn-purple" onClick={handleAddCustom}>Save Custom Item</button>
+          </div>
+        )}
       </div>
+
+      <div className="row g-4">
+  <div className="col-md-4">
+    <div className="p-3 rounded" style={{ background: "#222" }}>
+      <h2>
+        <i className="bi bi-heart-fill text-purple"></i> Favourites
+      </h2>
+      {favourites.map(renderItem)}
     </div>
+  </div>
+
+  <div className="col-md-4">
+    <div className="p-3 rounded" style={{ background: "#222" }}>
+      <h2>
+        <i className="bi bi-clock text-purple"></i> Watchlist
+      </h2>
+      {watchlist.map(renderItem)}
+    </div>
+  </div>
+
+  <div className="col-md-4">
+    <div className="p-3 rounded" style={{ background: "#222" }}>
+      <h2>
+        <i className="bi bi-check2-square text-purple"></i> Watched
+      </h2>
+      {watched.map(renderItem)}
+    </div>
+  </div>
+</div>
+</div>
+
   );
 }
 
