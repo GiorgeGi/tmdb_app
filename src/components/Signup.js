@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Signup() {
@@ -7,6 +7,26 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError]       = useState('');
   const nav = useNavigate();
+
+useEffect(() => {
+  const clockEl = document.getElementById('clock');
+  if (!clockEl) return;
+
+  const interval = setInterval(() => {
+    const now = new Date();
+
+    const day = now.getDate(); // 1–31
+    const month = now.toLocaleString('en-US', { month: 'long' }); // full month name
+    const year = now.getFullYear();
+
+    const dateStr = `${day} ${month} ${year}`;
+    const timeStr = now.toLocaleTimeString();
+
+    clockEl.textContent = `${dateStr} ${timeStr}`;
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
 
 const handleSubmit = async e => {
   e.preventDefault();

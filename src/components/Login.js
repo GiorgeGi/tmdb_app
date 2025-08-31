@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from "./../context/AuthContext"; // import context
 
@@ -9,6 +9,27 @@ export default function Login() {
   const [error, setError]       = useState('');
   const { login } = useContext(AuthContext);
   const nav = useNavigate();
+
+useEffect(() => {
+  const clockEl = document.getElementById('clock');
+  if (!clockEl) return;
+
+  const interval = setInterval(() => {
+    const now = new Date();
+
+    const day = now.getDate(); // 1–31
+    const month = now.toLocaleString('en-US', { month: 'long' }); // full month name
+    const year = now.getFullYear();
+
+    const dateStr = `${day} ${month} ${year}`;
+    const timeStr = now.toLocaleTimeString();
+
+    clockEl.textContent = `${dateStr} ${timeStr}`;
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
 
   const handleSubmit = async e => {
     e.preventDefault();
