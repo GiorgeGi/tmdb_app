@@ -3,11 +3,16 @@ import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+/**
+ * MovieDetail component: Shows detailed info about a single movie.
+ * Fetches data from TMDB API and local API endpoints (for user actions).
+ */
 export default function MovieDetail() {
-  const { id } = useParams();
-  const { user } = useContext(AuthContext);
+  const { id } = useParams(); // Movie ID from URL
+  const { user } = useContext(AuthContext); // Current logged-in user (for actions)
   const apiKey = "9677143e952d820ef6cfd4d08cbc6e8b";
 
+  // Movie and supporting states
   const [movie, setMovie] = useState(null);
   const [actors, setActors] = useState([]);
   const [actorsPage, setActorsPage] = useState(1);
@@ -17,11 +22,13 @@ export default function MovieDetail() {
   const [providersData, setProvidersData] = useState({});
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [providerQuery, setProviderQuery] = useState("");
+
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+  // Escapes HTML to prevent injection
   const escapeHtml = (str = "") =>
     String(str)
       .replaceAll("&", "&amp;")
@@ -30,6 +37,9 @@ export default function MovieDetail() {
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;");
 
+  /**
+   * Renders provider logos for streaming services
+   */
   const renderLogo = (provider) => {
     const logo = provider.logo_path
       ? (
@@ -48,11 +58,14 @@ export default function MovieDetail() {
     );
   };
 
+  /**
+   * Renders providers filtered by selected regions and search query
+   */
   const renderProviders = useCallback(() => {
     if (!selectedRegions.length) return <p className="text-muted">No regions selected.</p>;
 
     const query = providerQuery.trim().toLowerCase();
-    const categories = ["flatrate", "free", "ads", "rent", "buy"];
+    const categories = ["flatrate", "free", "ads", "rent", "buy"]; // TMDB categories
 
     return selectedRegions.map((regionCode) => {
       const regionData = providersData[regionCode];
@@ -88,6 +101,9 @@ export default function MovieDetail() {
     });
   }, [providersData, selectedRegions, providerQuery]);
 
+  /**
+   * Renders movie reviews
+   */
   const renderReviews = () => {
     if (!reviews.length) return (
       <p className="text-warning">
@@ -128,6 +144,9 @@ export default function MovieDetail() {
     );
   };
 
+  /**
+   * Handles user actions like "favorite", "watchlist", "watched"
+   */
   const handleAction = async (action) => {
     if (!user) { alert("You must be logged in!"); return; }
     try {
@@ -145,8 +164,12 @@ export default function MovieDetail() {
     }
   };
 
+  /**
+   * Fetches movie details, regions, providers, reviews, and credits
+   */
   useEffect(() => {
     if (!id) return;
+
     async function fetchJson(url) {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
@@ -175,18 +198,22 @@ export default function MovieDetail() {
         setError(err.message);
       }
     }
+
     fetchData();
   }, [id]);
 
+  // Handle loading and error states
   if (error) return <p className="text-danger">Error: {error}</p>;
   if (!movie) return <p>Loading...</p>;
 
+  // Poster & trailer info
   const poster = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "https://via.placeholder.com/500x750?text=No+Image";
 
   const trailer = (movie.videos?.results || []).find(v => v.type === "Trailer" && v.site === "YouTube");
 
+  // Actor pagination
   const paginatedActors = actors.slice((actorsPage - 1) * actorsPerPage, actorsPage * actorsPerPage);
   const totalActorPages = Math.ceil(actors.length / actorsPerPage);
 
@@ -198,6 +225,7 @@ export default function MovieDetail() {
 
       <div className="container mt-4">
         <div className="row g-0">
+          {/* Left column: Poster + actions */}
           <div className="col-md-4">
             <img src={poster} alt={movie.title} className="img-fluid rounded-start" style={{ objectFit: "cover", borderRadius: "8px" }} />
             <p className="card-text">
@@ -210,6 +238,7 @@ export default function MovieDetail() {
             </div>
           </div>
 
+          {/* Right column: Movie info */}
           <div className="col-md-8">
             <div className="card-body">
               <h3 className="card-title">{movie.title} <small className="text-muted">({movie.release_date})</small></h3>
@@ -242,6 +271,7 @@ export default function MovieDetail() {
             ))}
           </div>
 
+          {/* Pagination */}
           <div className="d-flex justify-content-between mt-2">
             <button className="btn btn-sm btn-secondary" disabled={actorsPage === 1} onClick={() => setActorsPage(prev => prev - 1)}>Previous</button>
             <span>Page {actorsPage} of {totalActorPages}</span>

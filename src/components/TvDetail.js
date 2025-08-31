@@ -1,32 +1,32 @@
-// src/TvDetail.js
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function TvDetail() {
-  const { id } = useParams();
-  const { user } = useContext(AuthContext);
-  const apiKey = "9677143e952d820ef6cfd4d08cbc6e8b";
+  const { id } = useParams(); // TV show ID from URL
+  const { user } = useContext(AuthContext); // logged-in user info
+  const apiKey = "9677143e952d820ef6cfd4d08cbc6e8b"; // TMDB API key
 
-  const [tv, setTv] = useState(null);
-  const [actors, setActors] = useState([]);
-  const [actorsPage, setActorsPage] = useState(1);
-  const actorsPerPage = 11;
+  // Local states
+  const [tv, setTv] = useState(null); // TV show details
+  const [actors, setActors] = useState([]); // cast
+  const [actorsPage, setActorsPage] = useState(1); // pagination page
+  const actorsPerPage = 11; // actors per page
 
-  //const [setRegions] = useState([]);
-  const [providersData, setProvidersData] = useState({});
-  const [reviews, setReviews] = useState([]);
-  const [selectedRegions] = useState([]);
-  const [providerQuery, setProviderQuery] = useState("");
-  const [seasonDetails, setSeasonDetails] = useState({});
-  const [error, setError] = useState(null);
+  const [providersData, setProvidersData] = useState({}); // streaming providers
+  const [reviews, setReviews] = useState([]); // reviews
+  const [selectedRegions] = useState([]); // currently selected regions
+  const [providerQuery, setProviderQuery] = useState(""); // provider search query
+  const [seasonDetails, setSeasonDetails] = useState({}); // details of each season
+  const [error, setError] = useState(null); // error message
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // navigation function
 
-  // Fetch TV details, regions, providers, reviews, and credits (actors)
+  // Fetch TV show details, regions, providers, reviews, and credits
   useEffect(() => {
     if (!id) return;
 
+    // Helper to fetch JSON from a URL
     const fetchJson = async (url) => {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
@@ -36,23 +36,17 @@ export default function TvDetail() {
     const fetchData = async () => {
       try {
         const [tvData, regionsData, providers, reviewsData, creditsData] = await Promise.all([
-          fetchJson(
-            `https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}&language=en-US&append_to_response=videos`
-          ),
+          fetchJson(`https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}&language=en-US&append_to_response=videos`),
           fetchJson(`https://api.themoviedb.org/3/watch/providers/regions?api_key=${apiKey}&language=en-US`),
           fetchJson(`https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}&language=en-US`),
           fetchJson(`https://api.themoviedb.org/3/tv/${id}/reviews?api_key=${apiKey}&language=en-US&page=1`),
           fetchJson(`https://api.themoviedb.org/3/tv/${id}/aggregate_credits?api_key=${apiKey}&language=en-US`)
         ]);
 
-        setTv(tvData);
-        setActors(creditsData.cast || []);
-        const regionsArray = Array.isArray(regionsData) ? regionsData : regionsData.results || [];
-        regionsArray.sort((a, b) => a.english_name.localeCompare(b.english_name));
-        //setRegions(regionsArray);
-
-        setProvidersData(providers.results || {});
-        setReviews(reviewsData.results || []);
+        setTv(tvData); // set TV show details
+        setActors(creditsData.cast || []); // set cast
+        setProvidersData(providers.results || {}); // set providers
+        setReviews(reviewsData.results || []); // set reviews
       } catch (err) {
         console.error("Error fetching TV details:", err);
         setError(err.message);
@@ -62,6 +56,7 @@ export default function TvDetail() {
     fetchData();
   }, [id]);
 
+  // Handle adding TV show to favorites, watchlist, or marking as watched
   const handleAction = async (action) => {
     if (!user) { alert("You must be logged in!"); return; }
     try {
@@ -79,6 +74,7 @@ export default function TvDetail() {
     }
   };
 
+  // Fetch details for a specific season if not already fetched
   const fetchSeasonDetails = async (seasonNumber) => {
     if (seasonDetails[seasonNumber]) return; // already fetched
     try {
@@ -91,6 +87,7 @@ export default function TvDetail() {
     }
   };
 
+  // Escape HTML to prevent XSS
   const escapeHtml = (str = "") =>
     String(str)
       .replaceAll("&", "&amp;")
@@ -99,6 +96,7 @@ export default function TvDetail() {
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;");
 
+  // Render a streaming provider logo
   const renderLogo = (provider) => {
     const logo = provider.logo_path ? (
       <img
@@ -107,6 +105,7 @@ export default function TvDetail() {
         style={{ maxWidth: "100px", height: "50px", objectFit: "contain" }}
       />
     ) : null;
+
     return (
       <div style={{ textAlign: "center", margin: "5px" }} key={provider.provider_id}>
         {logo || <div>{provider.provider_name}</div>}
@@ -114,47 +113,7 @@ export default function TvDetail() {
     );
   };
 
-  const renderProviders = useCallback(() => {
-    if (!selectedRegions.length) return <p className="text-muted">No regions selected.</p>;
-
-    const query = providerQuery.trim().toLowerCase();
-    const categories = ["flatrate", "free", "ads", "rent", "buy"];
-
-    return selectedRegions.map((regionCode) => {
-      const regionData = providersData[regionCode];
-      if (!regionData) return (
-        <div key={regionCode}>
-          <strong>{regionCode}:</strong> <em>No providers found</em>
-        </div>
-      );
-
-      return (
-        <div className="card mb-3" key={regionCode}>
-          <div className="card-body">
-            <h6>Providers for {regionCode}</h6>
-             {renderProviders()}
-            {regionData.link && (
-              <p>
-                <a href={regionData.link} target="_blank" rel="noopener noreferrer">More</a>
-              </p>
-            )}
-            {categories.map((cat) => {
-              const list = Array.isArray(regionData[cat]) ? regionData[cat] : [];
-              const filtered = query ? list.filter(p => p.provider_name.toLowerCase().includes(query)) : list;
-              if (!filtered.length) return null;
-              return (
-                <div className="mb-2" key={cat}>
-                  <strong>{cat.charAt(0).toUpperCase() + cat.slice(1)}: </strong>
-                  <div className="d-flex flex-wrap gap-2">{filtered.map(renderLogo)}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      );
-    });
-  }, [providersData, selectedRegions, providerQuery]);
-
+  // Render reviews for the TV show
   const renderReviews = () => {
     if (!reviews.length)
       return (
@@ -217,11 +176,13 @@ export default function TvDetail() {
 
   return (
     <>
+      {/* Back button */}
       <div className="container mt-4">
         <button className="btn btn-secondary" onClick={() => navigate("/")}>◀ Back to Main</button>
       </div>
 
       <div className="container mt-4">
+        {/* TV poster and actions */}
         <div className="row g-0">
           <div className="col-md-4">
             <img src={poster} alt={tv.name} className="img-fluid rounded-start" style={{ objectFit: "cover", borderRadius: "8px" }} />
@@ -235,6 +196,7 @@ export default function TvDetail() {
             </div>
           </div>
 
+          {/* TV details and trailer */}
           <div className="col-md-8">
             <div className="card-body">
               <h3 className="card-title">{tv.name} <small className="text-muted">({tv.first_air_date})</small></h3>
@@ -250,7 +212,7 @@ export default function TvDetail() {
           </div>
         </div>
 
-        {/* Actors */}
+        {/* Actors section */}
         <div className="mb-4">
           <h5>Cast</h5>
           <div className="d-flex flex-wrap gap-3">
@@ -266,7 +228,7 @@ export default function TvDetail() {
               </div>
             ))}
           </div>
-
+          {/* Actor pagination */}
           <div className="d-flex justify-content-between mt-2">
             <button className="btn btn-sm btn-secondary" disabled={actorsPage === 1} onClick={() => setActorsPage(prev => prev - 1)}>Previous</button>
             <span>Page {actorsPage} of {totalActorPages}</span>
@@ -274,9 +236,8 @@ export default function TvDetail() {
           </div>
         </div>
 
-        {/* Regions, Provider search, Seasons, Reviews */}
-        {/* ...keep your existing code as-is here... */}
-<div className="mb-3 px-3">
+        {/* Provider search input */}
+        <div className="mb-3 px-3">
           <label htmlFor="provider-search" className="form-label">
             <strong>Search providers:</strong>
           </label>
@@ -290,7 +251,7 @@ export default function TvDetail() {
           <div className="form-text text-muted">Search providers inside selected regions.</div>
         </div>
 
-{/* Seasons Accordion */}
+        {/* Seasons accordion */}
 <div className="mt-4 px-3">
   <h5>Seasons</h5>
   {tv.seasons && tv.seasons.length ? (
@@ -339,8 +300,7 @@ export default function TvDetail() {
                         "No overview available."}
                     </p>
 
-                    {seasonDetails[season.season_number].videos?.results
-                      ?.length > 0 && (
+                    {seasonDetails[season.season_number].videos?.results?.length > 0 && (
                       <div className="ratio ratio-16x9 mt-2">
                         <iframe
                           src={`https://youtube.com/embed/${seasonDetails[season.season_number].videos.results[0].key}`}
@@ -368,8 +328,7 @@ export default function TvDetail() {
 </div>
 
 
-
-        {/* Reviews */}
+        {/* Reviews section */}
         <div id="reviews-block" className="mt-4">
           <h5>Reviews</h5>
           {renderReviews()}
@@ -378,5 +337,4 @@ export default function TvDetail() {
     </>
   );
 }
-
 

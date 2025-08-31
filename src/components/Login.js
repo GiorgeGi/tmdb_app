@@ -1,55 +1,64 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from "./../context/AuthContext"; // import context
+import { AuthContext } from "./../context/AuthContext"; // Import authentication context
 
 export default function Login() {
-  const [email]       = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError]       = useState('');
-  const { login } = useContext(AuthContext);
-  const nav = useNavigate();
+  // Component state
+  const [email] = useState(''); // legacy field, not used but included in API call
+  const [username, setUsername] = useState(''); // username input
+  const [password, setPassword] = useState(''); // password input
+  const [error, setError] = useState(''); // error messages
 
-useEffect(() => {
-  const clockEl = document.getElementById('clock');
-  if (!clockEl) return;
+  const { login } = useContext(AuthContext); // use AuthContext to store token/user info
+  const nav = useNavigate(); // hook to programmatically navigate
 
-  const interval = setInterval(() => {
-    const now = new Date();
+  /**
+   * Effect: Updates the real-time clock every second
+   * The clock element is assumed to exist in the main HTML layout
+   */
+  useEffect(() => {
+    const clockEl = document.getElementById('clock');
+    if (!clockEl) return;
 
-    const day = now.getDate(); // 1–31
-    const month = now.toLocaleString('en-US', { month: 'long' }); // full month name
-    const year = now.getFullYear();
+    const interval = setInterval(() => {
+      const now = new Date();
+      const day = now.getDate(); // 1–31
+      const month = now.toLocaleString('en-US', { month: 'long' }); // full month name
+      const year = now.getFullYear();
+      const dateStr = `${day} ${month} ${year}`;
+      const timeStr = now.toLocaleTimeString();
 
-    const dateStr = `${day} ${month} ${year}`;
-    const timeStr = now.toLocaleTimeString();
+      clockEl.textContent = `${dateStr} ${timeStr}`;
+    }, 1000);
 
-    clockEl.textContent = `${dateStr} ${timeStr}`;
-  }, 1000);
+    return () => clearInterval(interval); // cleanup on unmount
+  }, []);
 
-  return () => clearInterval(interval);
-}, []);
-
-
+  /**
+   * Handles form submission to login the user
+   */
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault(); // prevent default form submission
     try {
       const res = await fetch("http://localhost/tmdb_app/api/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, password }),
-        credentials: "include" // not needed anymore, but can stay
+        body: JSON.stringify({ email, username, password }), // send credentials
+        credentials: "include" // include cookies/session info
       });
+
       const data = await res.json();
+
       if (data.token) {
-        login(username, data.token); // save in context + localStorage
-        localStorage.setItem("userId", data.userId); // keep userId too
-        nav("/");
+        // Successful login: store token and username in context and localStorage
+        login(username, data.token);
+        localStorage.setItem("userId", data.userId); // also store user ID
+        nav("/"); // redirect to home page
       } else {
-        setError(data.error || "Login failed");
+        setError(data.error || "Login failed"); // display backend error
       }
     } catch (err) {
-      setError("Network error");
+      setError("Network error"); // network/connection error
     }
   };
 
@@ -61,7 +70,7 @@ useEffect(() => {
           <input
             type="text"
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value)} // controlled input
             required
           />
         </label>
@@ -69,13 +78,18 @@ useEffect(() => {
           <input
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)} // controlled input
             required
           />
         </label>
+
+        {/* Display errors if any */}
         {error && <p className="error">{error}</p>}
+
         <button type="submit">Login</button>
       </form>
+
+      {/* Link to signup page */}
       <p>
         Don’t have an account? <Link to="/signup">Sign up</Link>
       </p>

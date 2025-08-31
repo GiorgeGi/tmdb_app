@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-//import { Link } from 'react-router-dom';
 import './style.css';
 import MoviesList from './components/MoviesList';
 import PopularTVShows from './components/PopularTVShows';
@@ -11,17 +10,24 @@ import MovieChatbot from './components/MovieChatbot';
 import { SearchContext } from './context/SearchContext';
 import MovieDetail from './components/MovieDetail';
 import TvDetail from './components/TvDetail';
-//import { UserBubble } from "./components/UserBubble";
 import ListsPage from './components/ListsPage';
 import CustomDetail from './components/CustomDetail';
 
+/**
+ * Navbar component handles:
+ * - Updating a live clock
+ * - Search form submission
+ * 
+ * Note: This component returns null because it only manages logic,
+ * not UI rendering.
+ */
 function Navbar() {
   const navigate = useNavigate();
   const { setQuery, setResults } = useContext(SearchContext);
-  const isAuthenticated = Boolean(localStorage.getItem('token'));
+  const isAuthenticated = Boolean(localStorage.getItem('token')); // Check if user is logged in
 
   useEffect(() => {
-    // Clock updater
+    // Live clock updater
     const updateClock = () => {
       const now = new Date();
       const timeString = now.toLocaleTimeString();
@@ -36,28 +42,29 @@ function Navbar() {
       }
     };
 
-    const interval = setInterval(updateClock, 1000);
-    updateClock();
+    const interval = setInterval(updateClock, 1000); // Update every second
+    updateClock(); // Initial call
 
-    // Search handler
+    // Search form handler
     const form = document.getElementById('searchForm');
     const handleSearch = (e) => {
       e.preventDefault();
       const input = document.getElementById('searchInput');
       const searchTerm = input?.value.trim();
 
-  if (!searchTerm) {
-    // Reset search
-    setQuery('');
-    setResults([]);
-    return;
-  }
+      if (!searchTerm) {
+        // Reset search results if input is empty
+        setQuery('');
+        setResults([]);
+        return;
+      }
 
+      // Fetch search results from TMDB API
       fetch(`https://api.themoviedb.org/3/search/multi?api_key=9677143e952d820ef6cfd4d08cbc6e8b&language=en-US&query=${encodeURIComponent(searchTerm)}`)
         .then(res => res.json())
         .then(data => {
-          setQuery(searchTerm.toLowerCase());
-          setResults(data.results || []);
+          setQuery(searchTerm.toLowerCase()); // Update global search query
+          setResults(data.results || []); // Update global search results
         })
         .catch(err => console.error("Search error:", err));
     };
@@ -73,9 +80,16 @@ function Navbar() {
     };
   }, [setQuery, setResults, navigate, isAuthenticated]);
 
-  return null; // Logic only
+  return null; // No UI rendering
 }
 
+/**
+ * Home component renders the main sections:
+ * - Movie chatbot
+ * - Movies list
+ * - Popular TV shows
+ * - Trailers carousel
+ */
 function Home() {
   return (
     <>
@@ -104,30 +118,34 @@ function Home() {
   );
 }
 
+/**
+ * App component defines routing for the SPA:
+ * - Public routes: Home, movie/tv/custom details, login, signup
+ * - Protected routes could be added later
+ * - Catch-all route redirects to Home
+ */
 function App() {
-  //const isAuthenticated = Boolean(localStorage.getItem('token'));
-
-//const { setQuery } = useContext(SearchContext);
-
   return (
-  <Routes>
-    <Route path="/login" element={<Login />} />
-    <Route path="/signup" element={<Signup />} />
+    <Routes>
+      {/* Authentication routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
 
-    {/* Home is public */}
-    <Route path="/" element={<Home />} />
+      {/* Home page (public) */}
+      <Route path="/" element={<Home />} />
 
-    {/* Details still public */}
-    <Route path="/movie/:id" element={<MovieDetail />} />
-    <Route path="/tv/:id" element={<TvDetail />} />
-    <Route path="/custom/:id" element={<CustomDetail />} />
+      {/* Detail pages (public) */}
+      <Route path="/movie/:id" element={<MovieDetail />} />
+      <Route path="/tv/:id" element={<TvDetail />} />
+      <Route path="/custom/:id" element={<CustomDetail />} />
 
-    {/* Catch-all */}
-    <Route path="*" element={<Navigate to="/" replace />} />
+      {/* User lists page */}
+      <Route path="/lists" element={<ListsPage />} />
 
-    <Route path="/lists" element={<ListsPage />} /> {/* new route */}
-  </Routes>
-);
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 export default App;
