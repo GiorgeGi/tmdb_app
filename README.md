@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# TMDB APP
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Η εφαρμογή **TMDB APP** αποτελεί έναν προσωπικό διαχειριστή ταινιών και σειρών, επιτρέποντας παρακολούθηση, σημειώσεις, αγαπημένα και προσαρμοσμένες καταχωρήσεις. Υλοποιείται με **React** για το frontend και **PHP + MySQL** για το backend.
 
-## Available Scripts
+## Περιγραφή
 
-In the project directory, you can run:
+Η εφαρμογή υποστηρίζει:
+* Προβολή και αναζήτηση ταινιών & σειρών μέσω TMDB API
+* Δημιουργία προσαρμοσμένων καταχωρήσεων (custom movies/TV shows)
+* Διαχείριση λιστών: Watchlist, Watched, Favorites
+* Σημειώσεις ανά ταινία ή σειρά
+* Toggle για αγαπημένα
+* Authentication με session cookies και Bearer tokens
+* REST API για όλες τις λειτουργίες
 
-### `npm start`
+## Ξεκίνημα
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Εξαρτήσεις
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* PHP 8+
+* MySQL / MariaDB
+* Composer (προαιρετικά για μελλοντικές βιβλιοθήκες)
+* Node.js + npm (για το React frontend)
+* Προγράμματα περιήγησης με υποστήριξη ES6
 
-### `npm test`
+### Δομή Αρχείων
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+.
+├── api
+│   ├── add_custom_item.php
+│   ├── _auth.php
+│   ├── _config.php
+│   ├── custom_fetch.php
+│   ├── lists_fetch.php
+│   ├── lists_get.php
+│   ├── lists_remove.php
+│   ├── lists_set.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── signup.php
+│   └── update_list.php
+├── directory_tree.txt
+├── node_modules
+│   └── ...
+├── package.json
+├── package-lock.json
+├── public
+│   ├── index.html
+│   ├── manifest.json
+│   ├── robots.txt
+│   └── TMDB.png
+├── README.md
+├── requirements.txt
+├── src
+│   ├── App.css
+│   ├── App.js
+│   ├── App.test.js
+│   ├── components
+│   │   ├── CustomDetail.js
+│   │   ├── ListsHelper.js
+│   │   ├── ListsPage.js
+│   │   ├── Login.js
+│   │   ├── MovieChatbot.css
+│   │   ├── MovieChatbot.js
+│   │   ├── MovieDetail.js
+│   │   ├── MoviesList.js
+│   │   ├── PopularTVShows.js
+│   │   ├── Signup.js
+│   │   ├── TrailersCarousel.js
+│   │   ├── TvDetail.js
+│   │   └── UserBubble.js
+│   ├── context
+│   │   ├── AuthContext.js
+│   │   └── SearchContext.js
+│   ├── index.css
+│   ├── index.js
+│   ├── reportWebVitals.js
+│   ├── setupTests.js
+│   ├── spaNavigation.js
+│   └── style.css
+└── tmdb_app.sql
 
-### `npm run build`
+### Εκτέλεση Backend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Δημιουργία βάσης και πινάκων από `db/schema.sql`.
+2. Ανάθεση δικαιωμάτων στο χρήστη της βάσης.
+3. Τοποθέτηση της εφαρμογής PHP σε web server (π.χ. Apache, Nginx) με ενεργοποιημένο PHP session.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Εκτέλεση Frontend
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+Εγκατάσταση εξαρτήσεων
+npm install 
 
-### `npm run eject`
+Εκτέλεση σε development mode
+npm start
+Ανοίξτε http://localhost:3000
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Build για Production
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Σημειώσεις
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Τα endpoints υποστηρίζουν τόσο cookie-based sessions όσο και Bearer token authentication.
+2. Όλα τα JSON API endpoints επιστρέφουν Content-Type: application/json.
+3. Προβλέπεται χειρισμός σφαλμάτων για authentication, validation και database exceptions.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Συντάκτες
 
-## Learn More
+Βαρβαρίγος Γεώργιος (ece21090@uop.gr)
+Πεγιάζης Γεώργιος (ece21081@uop.gr)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Άδεια
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is licensed under the GNU General Public License v3.0 License - see the LICENSE file for details
 
-### Code Splitting
+## Αναγνωρίσεις
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+* [How to Install ReactJS on Linux] (https://www.geeksforgeeks.org/techtips/how-to-install-reactjs-on-linux/)

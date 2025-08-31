@@ -45,6 +45,8 @@ export default function TvDetail() {
 
         setTv(tvData); // set TV show details
         setActors(creditsData.cast || []); // set cast
+        const regionsArray = Array.isArray(regionsData) ? regionsData : regionsData.results || [];
+        regionsArray.sort((a, b) => a.english_name.localeCompare(b.english_name));
         setProvidersData(providers.results || {}); // set providers
         setReviews(reviewsData.results || []); // set reviews
       } catch (err) {
@@ -112,6 +114,46 @@ export default function TvDetail() {
       </div>
     );
   };
+
+  const renderProviders = useCallback(() => {
+    if (!selectedRegions.length) return <p className="text-muted">No regions selected.</p>;
+    const query = providerQuery.trim().toLowerCase();
+    const categories = ["flatrate", "free", "ads", "rent", "buy"];
+    return selectedRegions.map((regionCode) => {
+      const regionData = providersData[regionCode];
+      if (!regionData) return (
+        <div key={regionCode}>
+          <strong>{regionCode}:</strong> <em>No providers found</em>
+        </div>
+      );
+      return (
+        <div className="card mb-3" key={regionCode}>
+          <div className="card-body">
+            <h6>Providers for {regionCode}</h6>
+             {renderProviders()}
+            {regionData.link && (
+              <p>
+                <a href={regionData.link} target="_blank" rel="noopener noreferrer">More</a>
+              </p>
+            )}
+            {categories.map((cat) => {
+              const list = Array.isArray(regionData[cat]) ? regionData[cat] : [];
+              const filtered = query ? list.filter(p => p.provider_name.toLowerCase().includes(query)) : list;
+              if (!filtered.length) return null;
+              return (
+                <div className="mb-2" key={cat}>
+                  <strong>{cat.charAt(0).toUpperCase() + cat.slice(1)}: </strong>
+                  <div className="d-flex flex-wrap gap-2">{filtered.map(renderLogo)}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    });
+  }, [providersData, selectedRegions, providerQuery]);
+
+
 
   // Render reviews for the TV show
   const renderReviews = () => {
