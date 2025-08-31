@@ -25,60 +25,60 @@
 
 ### Δομή Αρχείων
 
-.
-├── api
-│   ├── add_custom_item.php
-│   ├── _auth.php
-│   ├── _config.php
-│   ├── custom_fetch.php
-│   ├── lists_fetch.php
-│   ├── lists_get.php
-│   ├── lists_remove.php
-│   ├── lists_set.php
-│   ├── login.php
-│   ├── logout.php
-│   ├── signup.php
-│   └── update_list.php
-├── directory_tree.txt
-├── node_modules
-│   └── ...
-├── package.json
-├── package-lock.json
-├── public
-│   ├── index.html
-│   ├── manifest.json
-│   ├── robots.txt
-│   └── TMDB.png
-├── README.md
-├── requirements.txt
-├── src
-│   ├── App.css
-│   ├── App.js
-│   ├── App.test.js
-│   ├── components
-│   │   ├── CustomDetail.js
-│   │   ├── ListsHelper.js
-│   │   ├── ListsPage.js
-│   │   ├── Login.js
-│   │   ├── MovieChatbot.css
-│   │   ├── MovieChatbot.js
-│   │   ├── MovieDetail.js
-│   │   ├── MoviesList.js
-│   │   ├── PopularTVShows.js
-│   │   ├── Signup.js
-│   │   ├── TrailersCarousel.js
-│   │   ├── TvDetail.js
-│   │   └── UserBubble.js
-│   ├── context
-│   │   ├── AuthContext.js
-│   │   └── SearchContext.js
-│   ├── index.css
-│   ├── index.js
-│   ├── reportWebVitals.js
-│   ├── setupTests.js
-│   ├── spaNavigation.js
-│   └── style.css
-└── tmdb_app.sql
+```
+api
+├── add_custom_item.php
+├── _auth.php
+├── _config.php
+├── custom_fetch.php
+├── lists_fetch.php
+├── lists_get.php
+├── lists_remove.php
+├── lists_set.php
+├── login.php
+├── logout.php
+├── signup.php
+└── update_list.php
+node_modules
+└── ...
+package.json
+package-lock.json
+public
+├── index.html
+├── manifest.json
+├── robots.txt
+└── TMDB.png
+README.md
+requirements.txt
+src
+├── App.css
+├── App.js
+├── App.test.js
+├── components
+   ├── CustomDetail.js
+   ├── ListsHelper.js
+   ├── ListsPage.js
+   ├── Login.js
+   ├── MovieChatbot.css
+   ├── MovieChatbot.js
+   ├── MovieDetail.js
+   ├── MoviesList.js
+   ├── PopularTVShows.js
+   ├── Signup.js
+   ├── TrailersCarousel.js
+   ├── TvDetail.js
+   └── UserBubble.js
+├── context
+   ├── AuthContext.js
+   └── SearchContext.js
+├── index.css
+├── index.js
+├── reportWebVitals.js
+├── setupTests.js
+├── spaNavigation.js
+└── style.css
+tmdb_app.sql
+```
 
 ### Εκτέλεση Backend
 
@@ -89,14 +89,14 @@
 ### Εκτέλεση Frontend
 
 ```bash
-Εγκατάσταση εξαρτήσεων
+# Εγκατάσταση εξαρτήσεων
 npm install 
 
-Εκτέλεση σε development mode
+# Εκτέλεση σε development mode
 npm start
-Ανοίξτε http://localhost:3000
+# Ανοίξτε http://localhost:3000
 
-Build για Production
+# Build για Production
 npm run build
 ```
 
